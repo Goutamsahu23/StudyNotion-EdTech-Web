@@ -182,6 +182,7 @@ exports.login = async (req, res) => {
 exports.sendotp = async (req, res) => {
   try {
     const { email } = req.body
+    console.log(email)
 
     // Check if user is already present
     // Find user with provided email
@@ -214,10 +215,17 @@ exports.sendotp = async (req, res) => {
     const otpPayload = { email, otp }
     const otpBody = await OTP.create(otpPayload)
     console.log("OTP Body", otpBody)
+    
+    // Log OTP clearly for development/debugging
+    console.log("=".repeat(60));
+    console.log("OTP GENERATED FOR:", email);
+    console.log("OTP CODE:", otp);
+    console.log("=".repeat(60));
+    
     res.status(200).json({
       success: true,
       message: `OTP Sent Successfully`,
-      otp,
+      otp, // Include OTP in response for development (remove in production)
     })
   } catch (error) {
     console.log(error.message)

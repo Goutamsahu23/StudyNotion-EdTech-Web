@@ -2,6 +2,13 @@ const nodemailer = require("nodemailer")
 
 const mailSender = async (email, title, body) => {
   try {
+    // Check if email configuration exists
+    if (!process.env.MAIL_HOST || !process.env.MAIL_USER || !process.env.MAIL_PASS) {
+      console.log("⚠️  EMAIL CONFIGURATION MISSING - Skipping email send");
+      console.log("⚠️  Please set MAIL_HOST, MAIL_USER, and MAIL_PASS in .env file");
+      throw new Error("Email configuration missing");
+    }
+
     let transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
       auth: {
@@ -17,11 +24,11 @@ const mailSender = async (email, title, body) => {
       subject: `${title}`, // Subject line
       html: `${body}`, // html body
     })
-    console.log(info.response)
+    console.log("✅ Email sent successfully:", info.response)
     return info
   } catch (error) {
-    console.log(error.message)
-    return error.message
+    console.log("❌ Email sending failed:", error.message)
+    throw error // Re-throw to be caught by OTP model
   }
 }
 

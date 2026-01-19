@@ -6,7 +6,7 @@ const initialState = {
     ? JSON.parse(localStorage.getItem("cart"))
     : [],
   total: localStorage.getItem("total")
-    ? JSON.parse(localStorage.getItem("total"))
+    ? localStorage.getItem("token")
     : 0,
   totalItems: localStorage.getItem("totalItems")
     ? JSON.parse(localStorage.getItem("totalItems"))

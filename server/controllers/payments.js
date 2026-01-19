@@ -49,6 +49,14 @@ exports.capturePayment = async (req, res) => {
     }
   }
 
+  // Check if Razorpay is configured
+  if (!process.env.RAZORPAY_KEY || !process.env.RAZORPAY_SECRET) {
+    return res.status(500).json({
+      success: false,
+      message: "Payment gateway is not configured. Please contact support.",
+    })
+  }
+
   const options = {
     amount: total_amount * 100,
     currency: "INR",
@@ -64,10 +72,11 @@ exports.capturePayment = async (req, res) => {
       data: paymentResponse,
     })
   } catch (error) {
-    console.log(error)
-    res
-      .status(500)
-      .json({ success: false, message: "Could not initiate order." })
+    console.log("Razorpay order creation error:", error)
+    res.status(500).json({
+      success: false,
+      message: error.message || "Could not initiate order. Please check payment gateway configuration.",
+    })
   }
 }
 

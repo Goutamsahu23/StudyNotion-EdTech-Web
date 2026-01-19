@@ -64,6 +64,39 @@ export async function BuyCourse(
     }
     console.log("PAYMENT RESPONSE FROM BACKEND............", orderResponse.data)
 
+    // Check if Razorpay key is configured
+    if (!process.env.RAZORPAY_KEY) {
+      toast.dismiss(toastId)
+      toast.error("Payment gateway is not configured. Please contact support.")
+      console.error("RAZORPAY_KEY is not configured in environment variables")
+      return
+    }
+
+    // Store original body overflow to restore later
+    const originalBodyOverflow = document.body.style.overflow
+
+    // Function to restore body scroll
+    const restoreBodyScroll = () => {
+      // Force restore scroll by removing overflow hidden
+      document.body.style.overflow = originalBodyOverflow || ""
+      
+      // Also check and remove overflow hidden that Razorpay might have set
+      if (document.body.style.overflow === "hidden") {
+        document.body.style.overflow = ""
+      }
+      
+      // Use setTimeout to ensure it runs after Razorpay's cleanup
+      setTimeout(() => {
+        if (document.body.style.overflow === "hidden") {
+          document.body.style.overflow = ""
+        }
+        // Also check html element
+        if (document.documentElement.style.overflow === "hidden") {
+          document.documentElement.style.overflow = ""
+        }
+      }, 100)
+    }
+
     // Opening the Razorpay SDK
     const options = {
       key: process.env.RAZORPAY_KEY,
@@ -78,17 +111,46 @@ export async function BuyCourse(
         email: user_details.email,
       },
       handler: function (response) {
+        restoreBodyScroll()
         sendPaymentSuccessEmail(response, orderResponse.data.data.amount, token)
         verifyPayment({ ...response, courses }, token, navigate, dispatch)
       },
+      modal: {
+        ondismiss: function () {
+          // Handle modal close without payment
+          console.log("Payment modal closed by user")
+          restoreBodyScroll()
+          toast.dismiss(toastId) // Dismiss the loading toast
+        },
+      },
     }
-    const paymentObject = new window.Razorpay(options)
 
-    paymentObject.open()
-    paymentObject.on("payment.failed", function (response) {
-      toast.error("Oops! Payment Failed.")
-      console.log(response.error)
-    })
+    try {
+      const paymentObject = new window.Razorpay(options)
+
+      // Handle payment failure
+      paymentObject.on("payment.failed", function (response) {
+        restoreBodyScroll()
+        toast.dismiss(toastId)
+        toast.error("Oops! Payment Failed.")
+        console.log(response.error)
+      })
+
+      // Handle modal close event (alternative to modal.ondismiss)
+      paymentObject.on("modal.close", function () {
+        console.log("Payment modal closed")
+        restoreBodyScroll()
+        toast.dismiss(toastId) // Dismiss the loading toast
+      })
+
+      // Open the payment modal
+      paymentObject.open()
+    } catch (error) {
+      restoreBodyScroll()
+      toast.dismiss(toastId)
+      console.error("Error opening Razorpay checkout:", error)
+      toast.error("Failed to open payment gateway. Please try again.")
+    }
   } catch (error) {
     console.log("PAYMENT API ERROR............", error)
     toast.error("Could Not make Payment.")
