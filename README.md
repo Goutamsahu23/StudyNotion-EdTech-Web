@@ -51,6 +51,7 @@ cd ..
 
 ```env
 REACT_APP_API_URL=http://localhost:4000/api/v1
+REACT_APP_RAZORPAY_KEY=rzp_test_xxxxxxxx
 ```
 
 #### Backend — create `server/.env`
@@ -191,7 +192,7 @@ Then restart the dev server.
 ### Payments not working
 
 - Add Razorpay **test** keys to `server/.env`
-- For checkout in the browser, the Razorpay Key ID must be available to the frontend (Create React App only exposes `REACT_APP_*` variables)
+- Add the same **Key ID** to root `.env` as `REACT_APP_RAZORPAY_KEY` (Create React App only exposes `REACT_APP_*` vars to the browser)
 
 ## API Health Check
 

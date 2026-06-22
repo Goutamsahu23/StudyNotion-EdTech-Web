@@ -188,6 +188,24 @@ const seedDemoData = async () => {
 
     console.log(`✅ Created ${categories.length} categories`);
 
+    // Public sample MP4s for demo playback (instructor uploads use Cloudinary URLs instead)
+    const sampleVideos = [
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    ];
+
     // Create SubSections
     const subsections = await SubSection.insertMany([
       // Course 1 subsections
@@ -195,89 +213,89 @@ const seedDemoData = async () => {
         title: "Introduction to React",
         timeDuration: "15:30",
         description: "Learn the basics of React and its core concepts",
-        videoUrl: "https://example.com/video1",
+        videoUrl: sampleVideos[0],
       },
       {
         title: "Components and Props",
         timeDuration: "20:45",
         description: "Understanding React components and props",
-        videoUrl: "https://example.com/video2",
+        videoUrl: sampleVideos[1],
       },
       {
         title: "State and Lifecycle",
         timeDuration: "25:10",
         description: "Managing state in React components",
-        videoUrl: "https://example.com/video3",
+        videoUrl: sampleVideos[2],
       },
       {
         title: "Hooks in React",
         timeDuration: "30:20",
         description: "Using React Hooks for functional components",
-        videoUrl: "https://example.com/video4",
+        videoUrl: sampleVideos[3],
       },
       // Course 2 subsections
       {
         title: "Node.js Basics",
         timeDuration: "18:00",
         description: "Introduction to Node.js and its ecosystem",
-        videoUrl: "https://example.com/video5",
+        videoUrl: sampleVideos[4],
       },
       {
         title: "Express.js Framework",
         timeDuration: "22:30",
         description: "Building RESTful APIs with Express",
-        videoUrl: "https://example.com/video6",
+        videoUrl: sampleVideos[5],
       },
       {
         title: "Database Integration",
         timeDuration: "28:15",
         description: "Connecting Node.js with MongoDB",
-        videoUrl: "https://example.com/video7",
+        videoUrl: sampleVideos[6],
       },
       // Course 3 subsections
       {
         title: "Python Basics",
         timeDuration: "12:00",
         description: "Introduction to Python programming",
-        videoUrl: "https://example.com/video8",
+        videoUrl: sampleVideos[7],
       },
       {
         title: "Data Structures",
         timeDuration: "35:00",
         description: "Understanding Python data structures",
-        videoUrl: "https://example.com/video9",
+        videoUrl: sampleVideos[8],
       },
       {
         title: "NumPy and Pandas",
         timeDuration: "40:00",
         description: "Working with data using NumPy and Pandas",
-        videoUrl: "https://example.com/video10",
+        videoUrl: sampleVideos[9],
       },
       // Course 4 subsections
       {
         title: "React Native Introduction",
         timeDuration: "20:00",
         description: "Getting started with React Native",
-        videoUrl: "https://example.com/video11",
+        videoUrl: sampleVideos[10],
       },
       {
         title: "Navigation",
         timeDuration: "25:00",
         description: "Implementing navigation in React Native",
-        videoUrl: "https://example.com/video12",
+        videoUrl: sampleVideos[11],
       },
       // Course 5 subsections
       {
         title: "Docker Basics",
         timeDuration: "15:00",
         description: "Introduction to Docker containers",
-        videoUrl: "https://example.com/video13",
+        videoUrl: sampleVideos[12],
       },
       {
         title: "Kubernetes",
         timeDuration: "30:00",
         description: "Container orchestration with Kubernetes",
-        videoUrl: "https://example.com/video14",
+        videoUrl: sampleVideos[13],
       },
     ]);
 

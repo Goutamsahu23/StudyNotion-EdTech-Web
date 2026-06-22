@@ -64,11 +64,15 @@ export async function BuyCourse(
     }
     console.log("PAYMENT RESPONSE FROM BACKEND............", orderResponse.data)
 
-    // Check if Razorpay key is configured
-    if (!process.env.RAZORPAY_KEY) {
+    const razorpayKey =
+      orderResponse.data.key || process.env.REACT_APP_RAZORPAY_KEY
+
+    if (!razorpayKey) {
       toast.dismiss(toastId)
       toast.error("Payment gateway is not configured. Please contact support.")
-      console.error("RAZORPAY_KEY is not configured in environment variables")
+      console.error(
+        "Razorpay key missing from API response and REACT_APP_RAZORPAY_KEY"
+      )
       return
     }
 
@@ -99,7 +103,7 @@ export async function BuyCourse(
 
     // Opening the Razorpay SDK
     const options = {
-      key: process.env.RAZORPAY_KEY,
+      key: razorpayKey,
       currency: orderResponse.data.data.currency,
       amount: `${orderResponse.data.data.amount}`,
       order_id: orderResponse.data.data.id,
@@ -153,7 +157,7 @@ export async function BuyCourse(
     }
   } catch (error) {
     console.log("PAYMENT API ERROR............", error)
-    toast.error("Could Not make Payment.")
+    toast.error(error.message || "Could Not make Payment.")
   }
   toast.dismiss(toastId)
 }

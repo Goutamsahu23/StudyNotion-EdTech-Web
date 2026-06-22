@@ -70,6 +70,7 @@ exports.capturePayment = async (req, res) => {
     res.json({
       success: true,
       data: paymentResponse,
+      key: process.env.RAZORPAY_KEY,
     })
   } catch (error) {
     console.log("Razorpay order creation error:", error)
@@ -107,8 +108,15 @@ exports.verifyPayment = async (req, res) => {
     .digest("hex")
 
   if (expectedSignature === razorpay_signature) {
-    await enrollStudents(courses, userId, res)
-    return res.status(200).json({ success: true, message: "Payment Verified" })
+    try {
+      await enrollStudents(courses, userId)
+      return res.status(200).json({ success: true, message: "Payment Verified" })
+    } catch (error) {
+      console.log("Enrollment error:", error)
+      return res
+        .status(400)
+        .json({ success: false, message: error.message || "Enrollment failed" })
+    }
   }
 
   return res.status(200).json({ success: false, message: "Payment Failed" })
@@ -139,6 +147,10 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
         paymentId
       )
     )
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Payment success email sent" })
   } catch (error) {
     console.log("error in sending mail", error)
     return res
@@ -148,48 +160,43 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
 }
 
 // enroll the student in the courses
-const enrollStudents = async (courses, userId, res) => {
+const enrollStudents = async (courses, userId) => {
   if (!courses || !userId) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Please Provide Course ID and User ID" })
+    throw new Error("Please Provide Course ID and User ID")
   }
 
   for (const courseId of courses) {
-    try {
-      // Find the course and enroll the student in it
-      const enrolledCourse = await Course.findOneAndUpdate(
-        { _id: courseId },
-        { $push: { studentsEnroled: userId } },
-        { new: true }
-      )
+    const enrolledCourse = await Course.findOneAndUpdate(
+      { _id: courseId },
+      { $push: { studentsEnroled: userId } },
+      { new: true }
+    )
 
-      if (!enrolledCourse) {
-        return res
-          .status(500)
-          .json({ success: false, error: "Course not found" })
-      }
-      console.log("Updated course: ", enrolledCourse)
+    if (!enrolledCourse) {
+      throw new Error("Course not found")
+    }
+    console.log("Updated course: ", enrolledCourse)
 
-      const courseProgress = await CourseProgress.create({
-        courseID: courseId,
-        userId: userId,
-        completedVideos: [],
-      })
-      // Find the student and add the course to their list of enrolled courses
-      const enrolledStudent = await User.findByIdAndUpdate(
-        userId,
-        {
-          $push: {
-            courses: courseId,
-            courseProgress: courseProgress._id,
-          },
+    const courseProgress = await CourseProgress.create({
+      courseID: courseId,
+      userId: userId,
+      completedVideos: [],
+    })
+
+    const enrolledStudent = await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          courses: courseId,
+          courseProgress: courseProgress._id,
         },
-        { new: true }
-      )
+      },
+      { new: true }
+    )
 
-      console.log("Enrolled student: ", enrolledStudent)
-      // Send an email notification to the enrolled student
+    console.log("Enrolled student: ", enrolledStudent)
+
+    try {
       const emailResponse = await mailSender(
         enrolledStudent.email,
         `Successfully Enrolled into ${enrolledCourse.courseName}`,
@@ -198,11 +205,12 @@ const enrollStudents = async (courses, userId, res) => {
           `${enrolledStudent.firstName} ${enrolledStudent.lastName}`
         )
       )
-
       console.log("Email sent successfully: ", emailResponse.response)
     } catch (error) {
-      console.log(error)
-      return res.status(400).json({ success: false, error: error.message })
+      console.log(
+        "Enrollment email failed (enrollment completed):",
+        error.message
+      )
     }
   }
 }
