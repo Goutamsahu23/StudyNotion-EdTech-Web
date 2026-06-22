@@ -11,15 +11,16 @@ const mailSender = async (email, title, body) => {
 
     let transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
+        pass: process.env.MAIL_PASS.replace(/\s/g, ""),
       },
-      secure: false,
     })
 
     let info = await transporter.sendMail({
-      from: `"Studynotion | CodeHelp" <${process.env.MAIL_USER}>`, // sender address
+      from: `"StudyNotion" <${process.env.MAIL_USER}>`, // sender address
       to: `${email}`, // list of receivers
       subject: `${title}`, // Subject line
       html: `${body}`, // html body

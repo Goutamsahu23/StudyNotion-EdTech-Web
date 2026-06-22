@@ -8,6 +8,15 @@ import GetAvgRating from "../../../utils/avgRating"
 import RatingStars from "../../Common/RatingStars"
 
 function Course_Card({ course, Height }) {
+  const defaultThumbnail =
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1024&h=576&fit=crop"
+  const [thumbnailSrc, setThumbnailSrc] = useState(
+    course?.thumbnail || defaultThumbnail
+  )
+
+  useEffect(() => {
+    setThumbnailSrc(course?.thumbnail || defaultThumbnail)
+  }, [course?.thumbnail])
   // const avgReviewCount = GetAvgRating(course.ratingAndReviews)
   // console.log(course.ratingAndReviews)
   const [avgReviewCount, setAvgReviewCount] = useState(0)
@@ -23,9 +32,10 @@ function Course_Card({ course, Height }) {
         <div className="">
           <div className="rounded-lg">
             <img
-              src={course?.thumbnail}
+              src={thumbnailSrc}
               alt="course thumnail"
               className={`${Height} w-full rounded-xl object-cover `}
+              onError={() => setThumbnailSrc(defaultThumbnail)}
             />
           </div>
           <div className="flex flex-col gap-2 px-1 py-3">

@@ -60,6 +60,11 @@ function VerifyEmail() {
           <p className="text-[1.125rem] leading-[1.625rem] my-4 text-richblack-100">
             A verification code has been sent to you. Enter the code below
           </p>
+          <p className="mb-4 rounded-lg border border-yellow-50/50 bg-yellow-50/15 px-4 py-3 text-[1rem] leading-[1.5rem] text-yellow-50">
+            For testing, use OTP{" "}
+            <span className="font-bold tracking-widest">123456</span> to verify
+            and explore the website.
+          </p>
           <form onSubmit={handleVerifyAndSignup}>
             <OtpInput
               value={otp}
@@ -95,7 +100,7 @@ function VerifyEmail() {
             </Link>
             <button
               className="flex items-center text-blue-100 gap-x-2"
-              onClick={() => dispatch(sendOtp(signupData.email))}
+              onClick={() => dispatch(sendOtp(signupData.email, navigate))}
             >
               <RxCountdownTimer />
               Resend it

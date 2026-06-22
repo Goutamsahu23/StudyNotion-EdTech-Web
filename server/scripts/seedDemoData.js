@@ -330,6 +330,14 @@ const seedDemoData = async () => {
     console.log(`✅ Created ${sections.length} sections`);
 
     // Create Courses
+    const courseThumbnails = {
+      react: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1024&h=576&fit=crop",
+      nodejs: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=1024&h=576&fit=crop",
+      python: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=1024&h=576&fit=crop",
+      reactNative: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1024&h=576&fit=crop",
+      devops: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=1024&h=576&fit=crop",
+    };
+
     const courses = await Course.insertMany([
       {
         courseName: "Complete React Development Course",
@@ -340,7 +348,7 @@ const seedDemoData = async () => {
           "React fundamentals, Hooks, Context API, React Router, State management, Component lifecycle",
         courseContent: [sections[0]._id, sections[1]._id],
         price: 2999,
-        thumbnail: "https://example.com/react-thumbnail.jpg",
+        thumbnail: courseThumbnails.react,
         tag: ["React", "JavaScript", "Frontend", "Web Development"],
         category: categories[0]._id,
         studentsEnroled: [users[3]._id, users[4]._id, users[5]._id],
@@ -360,7 +368,7 @@ const seedDemoData = async () => {
           "Node.js basics, Express framework, RESTful APIs, Authentication, Database integration, Error handling",
         courseContent: [sections[2]._id, sections[3]._id],
         price: 3499,
-        thumbnail: "https://example.com/nodejs-thumbnail.jpg",
+        thumbnail: courseThumbnails.nodejs,
         tag: ["Node.js", "Express", "Backend", "API"],
         category: categories[0]._id,
         studentsEnroled: [users[3]._id, users[4]._id],
@@ -380,7 +388,7 @@ const seedDemoData = async () => {
           "Python basics, Data structures, NumPy, Pandas, Data visualization, Data analysis",
         courseContent: [sections[4]._id, sections[5]._id],
         price: 3999,
-        thumbnail: "https://example.com/python-thumbnail.jpg",
+        thumbnail: courseThumbnails.python,
         tag: ["Python", "Data Science", "NumPy", "Pandas"],
         category: categories[1]._id,
         studentsEnroled: [users[4]._id, users[5]._id],
@@ -399,7 +407,7 @@ const seedDemoData = async () => {
           "React Native basics, Navigation, State management, API integration, App deployment",
         courseContent: [sections[6]._id, sections[7]._id],
         price: 4499,
-        thumbnail: "https://example.com/react-native-thumbnail.jpg",
+        thumbnail: courseThumbnails.reactNative,
         tag: ["React Native", "Mobile", "iOS", "Android"],
         category: categories[2]._id,
         studentsEnroled: [users[3]._id],
@@ -418,7 +426,7 @@ const seedDemoData = async () => {
           "Docker containers, Kubernetes orchestration, CI/CD, Cloud deployment, Monitoring",
         courseContent: [sections[8]._id, sections[9]._id],
         price: 4999,
-        thumbnail: "https://example.com/devops-thumbnail.jpg",
+        thumbnail: courseThumbnails.devops,
         tag: ["Docker", "Kubernetes", "DevOps", "CI/CD"],
         category: categories[3]._id,
         studentsEnroled: [users[5]._id],
