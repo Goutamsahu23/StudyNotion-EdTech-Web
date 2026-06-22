@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react"
-// Icons
-import { FaRegStar, FaStar } from "react-icons/fa"
-import ReactStars from "react-rating-stars-component"
 import { Link } from "react-router-dom"
 
 import GetAvgRating from "../../../utils/avgRating"
 import RatingStars from "../../Common/RatingStars"
 
-function Course_Card({ course, Height }) {
+function CourseCard({ course, Height }) {
   const defaultThumbnail =
     "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1024&h=576&fit=crop"
   const [thumbnailSrc, setThumbnailSrc] = useState(
@@ -67,4 +64,4 @@ function Course_Card({ course, Height }) {
   )
 }
 
-export default Course_Card
+export default CourseCard
